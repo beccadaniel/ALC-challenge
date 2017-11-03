@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    tools:context="com.shadedaniel.android.currencyconverter.activities.ConversionActivity">
+
+   <!-- android:gravity="center_vertical"-->
+
+
+    <ImageView
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/conversion"/>
+
+    <EditText
+        android:id="@+id/amount_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:hint="Amount"
+        style="@style/Widget.AppCompat.EditText"/>
+    <TextView
+        android:id="@+id/btc_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:hint="BTC"
+        style="@style/Widget.AppCompat.EditText"/>
+    <TextView
+        android:id="@+id/eth_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:hint="ETH"
+        style="@style/Widget.AppCompat.EditText"/>
+    <Button
+        android:id="@+id/calculate_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="convert"/>
+</LinearLayout>
