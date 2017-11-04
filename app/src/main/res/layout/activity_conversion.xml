@@ -16,7 +16,6 @@
         android:layout_height="144dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/conversion"/>
-
     <EditText
         android:id="@+id/amount_text_view"
         android:layout_width="match_parent"

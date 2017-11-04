@@ -1,9 +1,14 @@
 package com.shadedaniel.android.currencyconverter.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.shadedaniel.android.currencyconverter.R;
@@ -21,6 +26,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
 
@@ -43,15 +49,26 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-      getValues();
+        boolean connected = isConnectionAvailable(this);
+        if (isConnectionAvailable(this))
+            getValues();
+        else
+            Toast.makeText(this, "No Internet Connection! Please retry.", Toast.LENGTH_LONG).show();
     }
 
     public void getValues(){
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading....\nPlease wait");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         ApiInterface apiInterface = RetrofitClient.getClient().create(ApiInterface.class);
        apiInterface.getExchangeRate().enqueue(new Callback<JsonObject>() {
            @Override
            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+               progressDialog.dismiss();
                JsonObject jsonObject = response.body();
                for (int i = 0; i < 20 ; i++){
 
@@ -73,5 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
            }
        });
+    }
+
+    // checks if device is connected to the internet
+    public static boolean isConnectionAvailable(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 }
