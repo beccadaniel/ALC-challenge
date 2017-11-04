@@ -13,8 +13,8 @@ import retrofit2.http.GET;
  */
 
 public interface ApiInterface {
-    static final String BASE_URL = "https://min-api.cryptocompare.com/";
-   // https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR
-    @GET("data/pricemulti?fsyms=ETH,BTC&tsyms=EUR,USD,NGN,CHF,KWD,ZAR,EGP,GBP,PEN,BRL,INR,JPY,JMD,CAD,GHS,OMR,SGD,UAH,AED,RON")
+    String BASE_URL = "https://min-api.cryptocompare.com/";
+
+    @GET("data/pricemulti?fsyms=ETH,BTC&tsyms=NGN,USD,EUR,CHF,KWD,ZAR,EGP,GBP,PEN,BRL,INR,JPY,JMD,CAD,GHS,OMR,SGD,UAH,AED,RON")
     Call<JsonObject> getExchangeRate();
 }

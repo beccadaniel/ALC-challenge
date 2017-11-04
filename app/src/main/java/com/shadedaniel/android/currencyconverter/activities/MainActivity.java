@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -18,7 +18,6 @@ import com.shadedaniel.android.currencyconverter.data.ExchangeRate;
 import com.shadedaniel.android.currencyconverter.data.RetrofitClient;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
 
-    public static String[] currencyName = {"Euro", "US Dollar", "Naira", "Swiss Franc",
+    public static String[] currencyName = {"Naira", "US Dollar", "Euro", "Swiss Franc",
             "Kuwaiti Dinar", "Rand", "Pound Sterling", "Nuevo Sol", "Brazillian Real",
             "Indian Rupee", "Yen", "Jamaican Dollar", "Canadian Dollar", "Ghana Cedi",
             "Omani Rial", "Singapore Dollar", "Hryvnia", "UAE Dirham", "Romanian Leu", "Egypt"};
 
-    public static String[] currencyRep = {"EUR", "USD", "NGN", "CHF", "KWD", "ZAR",
+    public static String[] currencyRep = {"NGN", "USD", "EUR", "CHF", "KWD", "ZAR",
             "GBP", "PEN", "BRL", "INR", "JPY", "JMD", "CAD", "GHS", "OMR", "SGD",
             "UAH", "AED", "RON", "EGP"};
 
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        boolean connected = isConnectionAvailable(this);
         if (isConnectionAvailable(this))
             getValues();
         else
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
            @Override
            public void onFailure(Call<JsonObject> call, Throwable t) {
-
            }
        });
     }

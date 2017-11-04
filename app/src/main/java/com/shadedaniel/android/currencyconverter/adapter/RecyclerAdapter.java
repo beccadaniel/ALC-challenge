@@ -13,6 +13,7 @@ import com.shadedaniel.android.currencyconverter.activities.ConversionActivity;
 import com.shadedaniel.android.currencyconverter.data.ExchangeRate;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by becca on 10/31/17.
@@ -23,14 +24,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     private ArrayList<ExchangeRate> exchangeRates;
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView currencyName, currencyRep, btcConverted, ethConverted;
-        public MyViewHolder(View view) {
+
+        MyViewHolder(View view) {
             super(view);
-            currencyName = (TextView) view.findViewById(R.id.currency_name_view);
-            currencyRep = (TextView) view.findViewById(R.id.currency_rep_view);
-            btcConverted = (TextView) view.findViewById(R.id.btc_converted_view);
-            ethConverted = (TextView) view.findViewById(R.id.eth_converted_view);
+            currencyName = view.findViewById(R.id.currency_name_view);
+            currencyRep = view.findViewById(R.id.currency_rep_view);
+            btcConverted = view.findViewById(R.id.btc_converted_view);
+            ethConverted = view.findViewById(R.id.eth_converted_view);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -56,8 +58,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
 
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        return myViewHolder;
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -65,8 +66,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         holder.currencyName.setText(exchangeRates.get(position).currencyName);
         holder.currencyRep.setText(exchangeRates.get(position).currencyRep);
-        holder.btcConverted.setText(exchangeRates.get(position).btc + "");
-        holder.ethConverted.setText(exchangeRates.get(position).eTH + "");
+        holder.btcConverted.setText(String.format("%.2f", exchangeRates.get(position).btc));
+        holder.ethConverted.setText(String.format("%.2f", exchangeRates.get(position).eTH));
     }
 
     @Override
