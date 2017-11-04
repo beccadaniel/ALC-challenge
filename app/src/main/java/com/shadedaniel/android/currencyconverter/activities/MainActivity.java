@@ -2,18 +2,23 @@ package com.shadedaniel.android.currencyconverter.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.shadedaniel.android.currencyconverter.R;
 import com.shadedaniel.android.currencyconverter.adapter.RecyclerAdapter;
 import com.shadedaniel.android.currencyconverter.data.ApiInterface;
+import com.shadedaniel.android.currencyconverter.data.Dataset;
 import com.shadedaniel.android.currencyconverter.data.ExchangeRate;
 import com.shadedaniel.android.currencyconverter.data.RetrofitClient;
 
@@ -23,20 +28,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.shadedaniel.android.currencyconverter.data.Dataset.currencyName;
+import static com.shadedaniel.android.currencyconverter.data.Dataset.currencyRep;
+
+
 public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
+    ArrayList<ExchangeRate> initialExchangeCards = new ArrayList<>();
+    FloatingActionButton fab;
+    RecyclerAdapter recyclerAdapter;
 
-    public static String[] currencyName = {"Naira", "US Dollar", "Euro", "Swiss Franc",
-            "Kuwaiti Dinar", "Rand", "Pound Sterling", "Nuevo Sol", "Brazillian Real",
-            "Indian Rupee", "Yen", "Jamaican Dollar", "Canadian Dollar", "Ghana Cedi",
-            "Omani Rial", "Singapore Dollar", "Hryvnia", "UAE Dirham", "Romanian Leu", "Egypt"};
-
-    public static String[] currencyRep = {"NGN", "USD", "EUR", "CHF", "KWD", "ZAR",
-            "GBP", "PEN", "BRL", "INR", "JPY", "JMD", "CAD", "GHS", "OMR", "SGD",
-            "UAH", "AED", "RON", "EGP"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +53,57 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (isConnectionAvailable(this))
-            getValues();
+            getResponse();
         else
             Toast.makeText(this, "No Internet Connection! Please retry.", Toast.LENGTH_LONG).show();
+
+
+        fab = (FloatingActionButton) findViewById(R.id.add_cards);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showDialog();
+            }
+        });
     }
 
-    public void getValues(){
+    public void showDialog() {
+        String[] list = Dataset.list;
+        final ArrayList selectedItems = new ArrayList();
 
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("select any currency")
+                .setMultiChoiceItems(list, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+                        if (isChecked) {
+                            // If the user checked the item, add it to the selected items
+                            selectedItems.add(indexSelected);
+                            initialExchangeCards.add(exchangeRates.get(indexSelected));
+
+                        } else if (selectedItems.contains(indexSelected)) {
+                            // Else, if the item is already in the array, remove it
+                            selectedItems.remove(Integer.valueOf(indexSelected));
+                            initialExchangeCards.remove(exchangeRates.get(indexSelected));
+                        }
+                    }
+                }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount());
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                }).create();
+        dialog.show();
+
+    }
+
+
+    public void getResponse() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading....\nPlease wait");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -63,30 +111,39 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.show();
 
         ApiInterface apiInterface = RetrofitClient.getClient().create(ApiInterface.class);
-       apiInterface.getExchangeRate().enqueue(new Callback<JsonObject>() {
-           @Override
-           public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-               progressDialog.dismiss();
-               JsonObject jsonObject = response.body();
-               for (int i = 0; i < 20 ; i++){
+        apiInterface.getExchangeRate().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                progressDialog.dismiss();
+                JsonObject jsonObject = response.body();
+                for (int i = 0; i < 20; i++) {
 
-                   exchangeRates.add(new ExchangeRate(
-                           currencyName[i],
-                           currencyRep[i],
-                           jsonObject.get("BTC").getAsJsonObject().get(currencyRep[i]).getAsDouble(),
-                           jsonObject.get("ETH").getAsJsonObject().get(currencyRep[i]).getAsDouble()
-                   ));
-               }
+                    if (i < 2)
+                        initialExchangeCards.add(new ExchangeRate(
+                                currencyName[i],
+                                currencyRep[i],
+                                jsonObject.get("BTC").getAsJsonObject().get(currencyRep[i]).getAsDouble(),
+                                jsonObject.get("ETH").getAsJsonObject().get(currencyRep[i]).getAsDouble()
+                        ));
+                    else {
 
-               RecyclerAdapter recyclerAdapter = new RecyclerAdapter(exchangeRates);
-               recyclerView.setAdapter(recyclerAdapter);
+                        exchangeRates.add(new ExchangeRate(
+                                currencyName[i],
+                                currencyRep[i],
+                                jsonObject.get("BTC").getAsJsonObject().get(currencyRep[i]).getAsDouble(),
+                                jsonObject.get("ETH").getAsJsonObject().get(currencyRep[i]).getAsDouble()
+                        ));
+                    }
 
-           }
+                    recyclerAdapter = new RecyclerAdapter(initialExchangeCards);
+                    recyclerView.setAdapter(recyclerAdapter);
+                }
+            }
 
-           @Override
-           public void onFailure(Call<JsonObject> call, Throwable t) {
-           }
-       });
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+            }
+        });
     }
 
     // checks if device is connected to the internet

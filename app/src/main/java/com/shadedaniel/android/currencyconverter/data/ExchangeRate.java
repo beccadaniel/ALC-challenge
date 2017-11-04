@@ -1,8 +1,5 @@
 package com.shadedaniel.android.currencyconverter.data;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by becca on 11/1/17.
  */

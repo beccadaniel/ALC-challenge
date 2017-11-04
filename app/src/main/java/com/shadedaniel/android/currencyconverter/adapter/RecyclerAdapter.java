@@ -42,6 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                     Bundle b = new Bundle();
                     b.putDouble("btcConversion", Double.valueOf(btcConverted.getText().toString()));
                     b.putDouble("ethConversion", Double.valueOf(ethConverted.getText().toString()));
+                    b.putString("currencyRep", currencyRep.getText().toString());
                     intent.putExtras(b);
                     v.getContext().startActivity(intent);
                 }
@@ -49,7 +50,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         }
     }
 
-    public RecyclerAdapter(ArrayList<ExchangeRate> data ) {
+    public RecyclerAdapter(ArrayList<ExchangeRate> data) {
         this.exchangeRates = data;
 
     }
@@ -66,8 +67,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         holder.currencyName.setText(exchangeRates.get(position).currencyName);
         holder.currencyRep.setText(exchangeRates.get(position).currencyRep);
-        holder.btcConverted.setText(String.format("%.2f", exchangeRates.get(position).btc));
-        holder.ethConverted.setText(String.format("%.2f", exchangeRates.get(position).eTH));
+        holder.btcConverted.setText(String.format(Locale.ENGLISH, "%.2f", exchangeRates.get(position).btc));
+        holder.ethConverted.setText(String.format(Locale.ENGLISH, "%.2f", exchangeRates.get(position).eTH));
     }
 
     @Override
