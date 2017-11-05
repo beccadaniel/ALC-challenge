@@ -13,11 +13,12 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_cards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/plus_icon"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_black_24dp"
         app:elevation="4dp" />
 
 </RelativeLayout>

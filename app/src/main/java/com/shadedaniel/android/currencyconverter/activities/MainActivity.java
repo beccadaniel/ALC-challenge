@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             getResponse();
         else {
             AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setMessage("No internet connection!!!")
                     .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
