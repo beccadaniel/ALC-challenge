@@ -29,8 +29,12 @@ public class ConversionActivity extends AppCompatActivity {
                 EditText amountView = (EditText) findViewById(R.id.amount_text_view);
                 TextView currencyView = (TextView) findViewById(R.id.currency_text_view);
                 currencyView.setText(b.getString("currencyRep"));
-                btcView.setText(String.valueOf(Double.valueOf(amountView.getText().toString())/b.getDouble("btcConversion")));
-                ethView.setText(String.valueOf(Double.valueOf(amountView.getText().toString())/b.getDouble("ethConversion")));
+
+                if (!(amountView.getText().toString().isEmpty())) {
+
+                    btcView.setText(String.valueOf(Double.valueOf(amountView.getText().toString()) / b.getDouble("btcConversion")));
+                    ethView.setText(String.valueOf(Double.valueOf(amountView.getText().toString()) / b.getDouble("ethConversion")));
+                }
 
             }
         });

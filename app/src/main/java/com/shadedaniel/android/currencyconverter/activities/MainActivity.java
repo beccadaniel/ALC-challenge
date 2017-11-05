@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.shadedaniel.android.currencyconverter.R;
@@ -52,20 +51,37 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (isConnectionAvailable(this))
-            getResponse();
-        else
-            Toast.makeText(this, "No Internet Connection! Please retry.", Toast.LENGTH_LONG).show();
-
+        checkingConnection();
 
         fab = (FloatingActionButton) findViewById(R.id.add_cards);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (isConnectionAvailable(this)) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDialog();
+                }
+            });
+        }
+    }
 
-                showDialog();
-            }
-        });
+    public void checkingConnection() {
+        if (isConnectionAvailable(this))
+            getResponse();
+        else {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            checkingConnection();
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    }).create();
+            dialog.show();
+
+        }
     }
 
     public void showDialog() {

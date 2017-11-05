@@ -49,6 +49,7 @@
             android:layout_weight="4"
             android:hint="Amount"
             android:padding="16dp"
+            android:inputType="numberDecimal"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Small" />
     </LinearLayout>
 
