@@ -39,11 +39,13 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ExchangeRate> initialExchangeCards = new ArrayList<>();
     FloatingActionButton fab;
     RecyclerAdapter recyclerAdapter;
-
+    AlertDialog dialog;
+    boolean[] checked = {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.card_list);
@@ -64,11 +66,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     public void checkingConnection() {
         if (isConnectionAvailable(this))
             getResponse();
         else {
-            AlertDialog dialog = new AlertDialog.Builder(this)
+            dialog = new AlertDialog.Builder(this)
+                    .setTitle("Ooops...")
                     .setMessage("No internet connection!!!")
                     .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
@@ -86,42 +94,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showDialog() {
-        String[] list = Dataset.list;
-        final ArrayList selectedItems = new ArrayList();
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        String[] list = Dataset.currencyRep;
+        dialog = new AlertDialog.Builder(this)
                 .setTitle("select any currency")
-                .setMultiChoiceItems(list, null, new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(list, checked, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
                         if (isChecked) {
-                            // If the user checked the item, add it to the selected items
-                            selectedItems.add(indexSelected);
+                            checked[indexSelected] = true;
                             initialExchangeCards.add(exchangeRates.get(indexSelected));
-
-                        } else if (selectedItems.contains(indexSelected)) {
-                            // Else, if the item is already in the array, remove it
-                            selectedItems.remove(Integer.valueOf(indexSelected));
-                            initialExchangeCards.remove(exchangeRates.get(indexSelected));
+                            recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount());
+                        } else {
+                            checked[indexSelected] = false;
+                            int index = initialExchangeCards.indexOf(exchangeRates.get(indexSelected));
+                            initialExchangeCards.remove(index);
+                            recyclerAdapter.notifyItemRemoved(index);
                         }
                     }
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount());
+                        //Log.d("TAG", selectedItems.toString());
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+
                     }
                 }).create();
         dialog.show();
 
     }
 
-
     public void getResponse() {
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this, R.style.ProgressDialogStyle);
         progressDialog.setMessage("Loading....\nPlease wait");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
@@ -134,31 +140,36 @@ public class MainActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 JsonObject jsonObject = response.body();
                 for (int i = 0; i < 20; i++) {
-
-                    if (i < 2)
-                        initialExchangeCards.add(new ExchangeRate(
-                                currencyName[i],
-                                currencyRep[i],
-                                jsonObject.get("BTC").getAsJsonObject().get(currencyRep[i]).getAsDouble(),
-                                jsonObject.get("ETH").getAsJsonObject().get(currencyRep[i]).getAsDouble()
-                        ));
-                    else {
-
-                        exchangeRates.add(new ExchangeRate(
-                                currencyName[i],
-                                currencyRep[i],
-                                jsonObject.get("BTC").getAsJsonObject().get(currencyRep[i]).getAsDouble(),
-                                jsonObject.get("ETH").getAsJsonObject().get(currencyRep[i]).getAsDouble()
-                        ));
-                    }
-
-                    recyclerAdapter = new RecyclerAdapter(initialExchangeCards);
-                    recyclerView.setAdapter(recyclerAdapter);
+                    exchangeRates.add(new ExchangeRate(
+                            currencyName[i],
+                            currencyRep[i],
+                            jsonObject.get("BTC").getAsJsonObject().get(currencyRep[i]).getAsDouble(),
+                            jsonObject.get("ETH").getAsJsonObject().get(currencyRep[i]).getAsDouble()
+                    ));
                 }
+                initialExchangeCards.add(exchangeRates.get(0));
+                recyclerAdapter = new RecyclerAdapter(initialExchangeCards);
+                recyclerView.setAdapter(recyclerAdapter);
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                progressDialog.dismiss();
+
+                dialog = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Ooops...")
+                        .setMessage("Bad internet connection!!!")
+                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                checkingConnection();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        }).create();
+                dialog.show();
             }
         });
     }

@@ -23,7 +23,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     private ArrayList<ExchangeRate> exchangeRates;
 
-
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView currencyName, currencyRep, btcConverted, ethConverted;
 
@@ -52,13 +51,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     public RecyclerAdapter(ArrayList<ExchangeRate> data) {
         this.exchangeRates = data;
-
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
-
         return new MyViewHolder(view);
     }
 

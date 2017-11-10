@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">Currency Converter</string>
-    <string name="instruction">Amount entered will be converted into \nBTC and ETH values after clicking the button</string>
 </resources>
