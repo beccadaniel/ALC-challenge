@@ -15,10 +15,13 @@ public class ConversionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Bundle b = getIntent().getExtras();
+        final String currencyRep = b.getString("currencyName");
+        setTitle(currencyRep);
+
         setContentView(R.layout.activity_conversion);
 
-        final Bundle b = getIntent().getExtras();
-        final String currencyRep = b.getString("currencyRep");
+
         final double btcConversion = b.getDouble("btcConversion");
         final double ethConversion = b.getDouble("ethConversion");
 

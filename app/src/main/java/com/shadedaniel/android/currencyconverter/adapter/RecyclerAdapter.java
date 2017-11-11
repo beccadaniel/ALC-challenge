@@ -41,6 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                     Bundle b = new Bundle();
                     b.putDouble("btcConversion", Double.valueOf(btcConverted.getText().toString()));
                     b.putDouble("ethConversion", Double.valueOf(ethConverted.getText().toString()));
+                    b.putString("currencyName", currencyName.getText().toString());
                     b.putString("currencyRep", currencyRep.getText().toString());
                     intent.putExtras(b);
                     v.getContext().startActivity(intent);

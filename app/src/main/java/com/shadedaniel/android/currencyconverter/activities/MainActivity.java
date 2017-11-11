@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.JsonObject;
@@ -33,10 +35,12 @@ import static com.shadedaniel.android.currencyconverter.data.Dataset.currencyRep
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
     ArrayList<ExchangeRate> initialExchangeCards = new ArrayList<>();
+    ArrayList<ExchangeRate> storedCards = new ArrayList<>();
     FloatingActionButton fab;
     RecyclerAdapter recyclerAdapter;
     AlertDialog dialog;
@@ -49,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.card_list);
-
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -64,11 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     public void checkingConnection() {
