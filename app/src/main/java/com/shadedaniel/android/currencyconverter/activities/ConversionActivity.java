@@ -41,7 +41,7 @@ public class ConversionActivity extends AppCompatActivity {
         tv2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCard("BTC", "To " + currencyRep + ":", "To ETH");
+                showCard("BTC", "To " + currencyRep + ":", "To ETH:");
             }
         });
 
