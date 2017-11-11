@@ -6,14 +6,13 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.gson.JsonObject;
 import com.shadedaniel.android.currencyconverter.R;
@@ -35,30 +34,21 @@ import static com.shadedaniel.android.currencyconverter.data.Dataset.currencyRep
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private ProgressDialog progressDialog;
-    private RecyclerView recyclerView;
+    RecyclerView recyclerView;
     ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
     ArrayList<ExchangeRate> initialExchangeCards = new ArrayList<>();
-    ArrayList<ExchangeRate> storedCards = new ArrayList<>();
-    FloatingActionButton fab;
     RecyclerAdapter recyclerAdapter;
     AlertDialog dialog;
-    boolean[] checked = {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    boolean[] checked = Dataset.getChecked();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
         recyclerView = (RecyclerView) findViewById(R.id.card_list);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         checkingConnection();
-
-        fab = (FloatingActionButton) findViewById(R.id.add_cards);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_cards);
         if (isConnectionAvailable(this)) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,20 +102,19 @@ public class MainActivity extends AppCompatActivity {
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        //Log.d("TAG", selectedItems.toString());
+                        isAdapterEmpty();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-
+                        isAdapterEmpty();
                     }
                 }).create();
         dialog.show();
-
     }
 
     public void getResponse() {
-        progressDialog = new ProgressDialog(this, R.style.ProgressDialogStyle);
+        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.ProgressDialogStyle);
         progressDialog.setMessage("Loading....\nPlease wait");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
@@ -133,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         ApiInterface apiInterface = RetrofitClient.getClient().create(ApiInterface.class);
         apiInterface.getExchangeRate().enqueue(new Callback<JsonObject>() {
+
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 progressDialog.dismiss();
@@ -153,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 progressDialog.dismiss();
-
                 dialog = new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Ooops...")
                         .setMessage("Bad internet connection!!!")
@@ -178,5 +167,14 @@ public class MainActivity extends AppCompatActivity {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public void isAdapterEmpty() {
+        LinearLayout layout = (LinearLayout) findViewById(R.id.empty);
+        if (initialExchangeCards.isEmpty()) {
+            layout.setVisibility(View.VISIBLE);
+        } else {
+            layout.setVisibility(View.GONE);
+        }
     }
 }

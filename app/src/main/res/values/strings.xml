@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Currency Converter</string>
     <string name="activity_name">Conversion</string>
+    <string name="empty">Oops...\n\nThe screen is empty.\n\nWhy don\'t you create cards?</string>
 </resources>

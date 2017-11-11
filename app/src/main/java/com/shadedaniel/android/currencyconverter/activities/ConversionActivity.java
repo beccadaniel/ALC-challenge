@@ -14,20 +14,18 @@ public class ConversionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Bundle b = getIntent().getExtras();
-        final String currencyRep = b.getString("currencyName");
-        setTitle(currencyRep);
-
         setContentView(R.layout.activity_conversion);
 
-
+        final Bundle b = getIntent().getExtras();
+        final String currencyRep = b.getString("currencyRep");
         final double btcConversion = b.getDouble("btcConversion");
         final double ethConversion = b.getDouble("ethConversion");
 
         final TextView tv1 = (TextView) findViewById(R.id.other_crypto);
         final TextView tv2 = (TextView) findViewById(R.id.btc_to_other);
         final TextView tv3 = (TextView) findViewById(R.id.eth_to_other);
+
+        setTitle(b.getString("currencyName"));
 
         tv1.setText(currencyRep + " - BTC/ETH");
         tv2.setText("BTC - " + currencyRep + "/ETH");
@@ -43,7 +41,7 @@ public class ConversionActivity extends AppCompatActivity {
         tv2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCard("BTC", "To " + currencyRep + ":", "ETH");
+                showCard("BTC", "To " + currencyRep + ":", "To ETH");
             }
         });
 

@@ -14,4 +14,10 @@ public class Dataset {
     public static String[] currencyRep = {"NGN", "USD", "EUR", "CHF", "KWD", "ZAR",
             "GBP", "PEN", "BRL", "INR", "JPY", "JMD", "CAD", "GHS", "OMR", "SGD",
             "UAH", "AED", "RON", "EGP"};
+
+    public static boolean[] getChecked() {
+        boolean[] checked = new boolean[20];
+        checked[0] = true;
+        return checked;
+    }
 }
