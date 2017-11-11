@@ -2,6 +2,7 @@ package com.shadedaniel.android.currencyconverter.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,8 +62,12 @@ public class ConversionActivity extends AppCompatActivity {
                 final TextView ethView = (TextView) findViewById(R.id.eth_text_view);
                 final EditText amountView = (EditText) findViewById(R.id.amount_text_view);
                 if (!(amountView.getText().toString().isEmpty())) {
-                    if (btv.getText() == "BTC") {
-                        btcView.setText(String.valueOf(Double.valueOf(amountView.getText().toString()) / btcConversion));
+                    if (btv.getText() == "To BTC:") {
+                        double ans = Double.valueOf(amountView.getText().toString()) / btcConversion;
+                        Log.d("TAG", amountView.getText().toString());
+                        Log.d("TAG", String.valueOf(btcConversion));
+                        Log.d("TAG", String.valueOf(Double.valueOf(amountView.getText().toString()) / btcConversion));
+                        btcView.setText(String.valueOf(ans));
                         ethView.setText(String.valueOf(Double.valueOf(amountView.getText().toString()) / ethConversion));
                         return;
                     }
