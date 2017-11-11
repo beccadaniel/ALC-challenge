@@ -63,21 +63,7 @@ public class MainActivity extends AppCompatActivity {
         if (isConnectionAvailable(this))
             getResponse();
         else {
-            dialog = new AlertDialog.Builder(this)
-                    .setTitle("Ooops...")
-                    .setMessage("No internet connection!!!")
-                    .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            checkingConnection();
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    }).create();
-            dialog.show();
-
+            dialogInternet("No Internet Connection!!!");
         }
     }
 
@@ -143,21 +129,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 progressDialog.dismiss();
-                dialog = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Ooops...")
-                        .setMessage("Bad internet connection!!!")
-                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                checkingConnection();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                isAdapterEmpty();
-                            }
-                        }).create();
-                dialog.show();
+                dialogInternet("Bad Internet Connection!!!");
             }
         });
     }
@@ -168,6 +140,24 @@ public class MainActivity extends AppCompatActivity {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public void dialogInternet(String message) {
+        dialog = new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Ooops...")
+                .setMessage(message)
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        checkingConnection();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        isAdapterEmpty();
+                    }
+                }).create();
+        dialog.show();
     }
 
     public void isAdapterEmpty() {
