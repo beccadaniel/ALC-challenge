@@ -137,7 +137,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:padding="16dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Small" />
+                    android:focusable="false"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Small"
+                    android:textIsSelectable="true" />
 
             </LinearLayout>
 
@@ -164,7 +166,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:padding="16dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Small" />
+                    android:focusable="false"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Small"
+                    android:textIsSelectable="true" />
 
             </LinearLayout>
 
